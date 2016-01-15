@@ -69,7 +69,8 @@ def create_model_seq2seq(session):
     return model
 
 def train():
-    with tf.Session() as sess:
+    with tf.Session(config=tf.ConfigProto(
+            allow_soft_placement=False, log_device_placement=True)) as sess:
         print("Creating %d layers of %d units." % (FLAGS.num_layers, FLAGS.size))
         model = create_model(sess)
         #model = create_model_seq2seq(sess)
@@ -131,7 +132,8 @@ def train():
                 sys.stdout.flush()
 
 def main(_):
-    train()
+    with tf.device('/gpu:0'):
+        train()
 
 if __name__ == "__main__":
   tf.app.run()
